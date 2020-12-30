@@ -56,13 +56,16 @@ app.layout = html.Div(id='custom-auth-frame')
 def request_author_bat(partnumber):
     try:
         btnStatus = False
-        r = requests.get('http://127.0.0.1:3000/explore/repos')
-        author = [i for i in r.content.decode().split('\n') if partnumber in i][-1].strip().split('/')[0].strip()
+        # r = requests.get('http://127.0.0.1:3000/explore/repos')
+        r = requests.get('http://127.0.0.1/')
+        # author = [i for i in r.content.decode().split('\n') if partnumber in i][-1].strip().split('/')[0].strip()
+        author='NickTest'
         f = open(os.path.join(os.getcwd(),'downloads/')+partnumber+'.bat','w')
         f.write('cd ..\n')
         f.write('cd Desktop\n')
         f.write('rmdir /S /Q {}\n'.format(partnumber))
-        f.write('git clone http://192.168.0.10:3000/{}/{}.git\n'.format(author,partnumber))
+        # f.write('git clone http://192.168.0.10:3000/{}/{}.git\n'.format(author,partnumber))
+        f.write('git clone http://127.0.0.1/{}/{}.git\n'.format(author,partnumber))
         f.write('cd ..\n')
         f.write('cd Downloads/\n')
         f.write('del {}*.bat\n'.format(partnumber))
@@ -85,8 +88,8 @@ def dynamic_layout(_):
     if not session_cookie:
         # If there's no cookie we need to login.
         return loginForm(flask.request.remote_addr)
-    elif flask.request.remote_addr == '127.0.0.1' and session_cookie == 'admin':
-        return adminForm(flask.request.remote_addr,session_cookie,partnumber,True)
+    # elif flask.request.remote_addr == '127.0.0.1' and session_cookie == 'admin':
+    #     return adminForm(flask.request.remote_addr,session_cookie,partnumber,True)
     return logoutForm(flask.request.remote_addr,session_cookie,partnumber,btnStatus)
 
 @app.callback(
@@ -110,7 +113,6 @@ def generate_report_url(n_clicks):
     # tb_delete(int(id_.split('_')[-1])+1)
     return df_to_table(pd.DataFrame(tb_seek()))
     # return df_to_table(pd.DataFrame(tb_seek()))
-
 
 if __name__ == '__main__':
     app.run_server(debug=True,host='0.0.0.0')
